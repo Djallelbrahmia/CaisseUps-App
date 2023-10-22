@@ -16,7 +16,7 @@ class ShadowBox extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.fromLTRB(0, 0, 8, 32),
         padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
-        width: size.width * 0.75,
+        width: size.width * 0.85,
         height: 192,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

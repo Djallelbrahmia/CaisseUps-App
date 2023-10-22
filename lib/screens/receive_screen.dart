@@ -4,6 +4,9 @@ import 'package:caisseapp/widget/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'dart:convert' as convert;
+
 class ReceiveScreen extends StatefulWidget {
   const ReceiveScreen({super.key});
 
@@ -42,6 +45,33 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     super.dispose();
   }
 
+  String _scanBarcode = 'Scanne';
+  bool isNumeric(String? str) {
+    if (str == null || str.isEmpty) {
+      return false;
+    }
+
+    return double.tryParse(str) != null;
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = GlobalMethodes.getScreenSize(context);
@@ -60,16 +90,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ),
             InkWell(
-              onTap: () {
+              onTap: () async {
+                await scanBarcodeNormal();
+                var qr = convert.jsonDecode(_scanBarcode);
                 setState(() {
                   _dataIsScanned = !_dataIsScanned;
-                  _clientController.text = "Djalle Brahmia || OXFW211";
-                  _originController.text =
-                      "Annaba oued aneb Kherazza 02 , 23038";
-                  _destinationController.text =
-                      "Annaba oued aneb Kherazza 02 , 23038";
-                  _codController.text = "35000.00 Dzd";
-                  _weightController.text = "19kg";
+                  _clientController.text = qr['client'];
+                  _destinationController.text = qr['destination'];
+                  _originController.text = qr['origin'];
+
+                  _codController.text = qr['cod'];
+                  _weightController.text = qr['weight'];
                 });
               },
               child: AnimatedContainer(
@@ -138,10 +169,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ButtonWidget(
-                                widthPortion: 0.3,
+                                widthPortion: 0.33,
                                 color: const Color(0xffA90000),
                                 image: "assets/icons/Cancel.png",
-                                text: "Cancel",
+                                text: "",
                                 textColor: const Color(0xffF7F9F8),
                                 onTap: () {}),
                             ButtonWidget(

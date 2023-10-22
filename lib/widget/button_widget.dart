@@ -27,8 +27,8 @@ class ButtonWidget extends StatelessWidget {
       child: Container(
         height: 64,
         width: size.width * widthPortion,
-        margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        margin: const EdgeInsets.fromLTRB(0, 0, 4, 4),
+        padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(8),
@@ -45,7 +45,7 @@ class ButtonWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
               width: 24,
               height: 24,
               child: Image.asset(
@@ -57,7 +57,7 @@ class ButtonWidget extends StatelessWidget {
             TextWidget(
               isBold: false,
               isHeader: true,
-              textSize: 18,
+              textSize: 14,
               text: text,
               color: textColor,
             )

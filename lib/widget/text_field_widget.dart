@@ -11,17 +11,19 @@ class TextFieldWidget extends StatefulWidget {
       required this.leftIcon,
       required this.isEnabled,
       required this.validator,
-      this.keyboardType,
+      this.securePassword,
       required this.onEditingComplete,
       this.rightIcon,
+      this.hasLeftIcon,
       required this.label});
   FocusNode focusNode;
   TextEditingController textEditingController;
   String leftIcon, label;
+  bool? hasLeftIcon = false;
   bool isEnabled = true;
   Function onEditingComplete;
   Function validator;
-  TextInputType? keyboardType = TextInputType.name;
+  bool? securePassword = false;
   Widget? rightIcon;
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -59,7 +61,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           Container(
             padding: const EdgeInsets.fromLTRB(4, 7, 4, 6),
             width: double.infinity,
-            height: 48,
+            height: 64,
             decoration: BoxDecoration(
               color: widget.isEnabled
                   ? Colors.white
@@ -73,46 +75,54 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    widget.leftIcon,
+                Visibility(
+                  visible: widget.hasLeftIcon ?? true,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                     width: 24,
                     height: 24,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
-                  width: MediaQuery.of(context).size.width * 0.83,
-                  height: double.infinity,
-                  child: Center(
-                    child: Focus(
-                      onFocusChange: (hasFocus) {
-                        setState(() {
-                          _isEditing = hasFocus;
-                        });
-                      },
-                      focusNode: widget.focusNode,
-                      child: TextFormField(
-                        onEditingComplete: widget.onEditingComplete(),
-                        enabled: widget.isEnabled,
-                        keyboardType: widget.keyboardType,
-                        controller: widget.textEditingController,
-                        validator: widget.validator(),
-                        decoration: InputDecoration(
-                          labelStyle: GoogleFonts.playfairDisplay(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                          suffixIcon: widget.rightIcon,
-                          hintStyle: GoogleFonts.playfairDisplay(
-                              fontSize: 12, fontWeight: FontWeight.normal),
-                          border: InputBorder.none,
-                        ),
-                      ),
+                    child: Image.asset(
+                      widget.leftIcon,
+                      width: 24,
+                      height: 24,
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: double.infinity,
+                      child: Center(
+                        child: Focus(
+                          onFocusChange: (hasFocus) {
+                            setState(() {
+                              _isEditing = hasFocus;
+                            });
+                          },
+                          focusNode: widget.focusNode,
+                          child: TextFormField(
+                            obscureText: widget.securePassword ?? false,
+                            onEditingComplete: widget.onEditingComplete(),
+                            enabled: widget.isEnabled,
+                            controller: widget.textEditingController,
+                            validator: widget.validator(),
+                            decoration: InputDecoration(
+                              labelStyle: GoogleFonts.playfairDisplay(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                              hintStyle: GoogleFonts.playfairDisplay(
+                                  fontSize: 12, fontWeight: FontWeight.normal),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                widget.rightIcon ?? const SizedBox(),
               ],
             ),
           ),
