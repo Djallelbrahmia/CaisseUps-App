@@ -32,17 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return FutureBuilder(
       future: _firebaseInitialization,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          print(snapshot.connectionState);
-          return const MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xff8FBC8F),
-                ),
-              ),
-            ),
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Caisse App',
+            theme: GlobalMethodes.getThemeData(),
+            home: (authInstance.currentUser == null)
+                ? const LoginView()
+                : const MyHomePage(),
           );
         } else if (snapshot.hasError) {
           return MaterialApp(
@@ -52,12 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
-        return MaterialApp(
-          title: 'Caisse App',
-          theme: GlobalMethodes.getThemeData(),
-          home: (authInstance.currentUser == null)
-              ? const LoginView()
-              : const MyHomePage(),
+        return const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Color(0xff8FBC8F),
+              ),
+            ),
+          ),
         );
       },
     );

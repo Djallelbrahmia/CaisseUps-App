@@ -10,7 +10,6 @@ class TextFieldWidget extends StatefulWidget {
       required this.textEditingController,
       required this.leftIcon,
       required this.isEnabled,
-      required this.validator,
       this.securePassword,
       required this.onEditingComplete,
       this.rightIcon,
@@ -21,8 +20,7 @@ class TextFieldWidget extends StatefulWidget {
   String leftIcon, label;
   bool? hasLeftIcon = false;
   bool isEnabled = true;
-  Function onEditingComplete;
-  Function validator;
+  void Function() onEditingComplete;
   bool? securePassword = false;
   Widget? rightIcon;
   @override
@@ -93,7 +91,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   children: [
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.78,
                       height: double.infinity,
                       child: Center(
                         child: Focus(
@@ -105,10 +103,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                           focusNode: widget.focusNode,
                           child: TextFormField(
                             obscureText: widget.securePassword ?? false,
-                            onEditingComplete: widget.onEditingComplete(),
+                            onEditingComplete: widget.onEditingComplete,
                             enabled: widget.isEnabled,
                             controller: widget.textEditingController,
-                            validator: widget.validator(),
                             decoration: InputDecoration(
                               labelStyle: GoogleFonts.playfairDisplay(
                                   fontSize: 12, fontWeight: FontWeight.bold),
